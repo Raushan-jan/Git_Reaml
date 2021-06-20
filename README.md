@@ -241,31 +241,36 @@ Inside tests/ there are 3 locations the files can be placed in:
 - test/src/macosTest
 Ideally all shared tests should be in commonTest with specific platform tests in androidTest/macosTest. However IntelliJ does not yet allow you run you to run common tests on Android from within the IDE](https://youtrack.jetbrains.com/issue/KT-46452), so we are using the following work-around:
 
-All "common" tests should be placed in the test/src/androidtest/kotlin/io/realm/shared folder. They should be written using only common API's. I'e. use Kotlin Test, not JUnit. This io.realm.shared package should only contain tests we plan to eventually move to commontTest.
+1\.All "common" tests should be placed in the test/src/androidtest/kotlin/io/realm/shared folder. They should be written using only common API's. I'e. use Kotlin Test, not JUnit. This io.realm.shared package should only contain tests we plan to eventually move to commontTest.
 
-When adding a new test file to androidTest we need to re-create the symlinks for macOS. This can be done, using the following command on Mac:
+2\. When adding a new test file to androidTest we need to re-create the symlinks for macOS. This can be done, using the following command on Mac:
 
-cd test/src/macosTest/kotlin/io/realm/shared
-ln -sf ../../../../../androidTest/kotlin/io/realm/shared/* ./
-Both the real test file and the symlink must be committed to Git.
+<code>cd test/src/macosTest/kotlin/io/realm/shared
+ln -sf ../../../../../androidTest/kotlin/io/realm/shared/* ./</code>
+3\.Both the real test file and the symlink must be committed to Git.
 
-This allows us to run and debug unit tests on both macOS and Android. It is easier getting the imports correctly using the macOS sourceset as the Android code will default to using JUnit.
+4\.This allows us to run and debug unit tests on both macOS and Android. It is easier getting the imports correctly using the macOS sourceset as the Android code will default to using JUnit.
 
 All platform specific tests should be placed outside the io.realm.shared package, the default being io.realm.
 
-Defining dependencies
+#### Defining dependencies
+___
 All dependency versions and other constants we might want to share between projects are defined inside the file buildSrc/src/main/kotlin/Config.kt. Any new dependencies should be added to this file as well, so we only have one location for these.
 
-Contributing Enhancements
-We love contributions to Realm! If you'd like to contribute code, documentation, or any other improvements, please file a Pull Request on our GitHub repository. Make sure to accept our CLA!
+#### Contributing Enhancements
+___
+We love contributions to Realm! If you'd like to contribute code, documentation, or any other improvements, please [file a Pull]() Request on our GitHub repository. Make sure to accept our CLA!
 
-This project adheres to the Contributor Covenant Code of Conduct. By participating, you are expected to uphold this code. Please report unacceptable behavior to info@realm.io.
+This project adheres to the [Contributor Covenant Code of Conduct](). By participating, you are expected to uphold this code. Please report unacceptable behavior to [info@realm.io]().
 
-CLA
-Realm welcomes all contributions! The only requirement we have is that, like many other projects, we need to have a Contributor License Agreement (CLA) in place before we can accept any external code. Our own CLA is a modified version of the Apache Software Foundation’s CLA.
+####CLA
 
-Please submit your CLA electronically using our Google form so we can accept your submissions. The GitHub username you file there will need to match that of your Pull Requests. If you have any questions or cannot file the CLA electronically, you can email help@realm.io.
+Realm welcomes all contributions! The only requirement we have is that, like many other projects, we need to have a[ Contributor License Agreement]() (CLA) in place before we can accept any external code. Our own CLA is a modified version of the Apache Software Foundation’s CLA.
 
-Samples
-Kotlin Multiplatform Sample
-The folder examples/kmm-sample contains an example showing how to use Realm in a multiplatform project, sharing code for using Realm in the shared module. The project is based on https://github.com/Kotlin/kmm-sample.
+[Please submit your CLA electronically]() using our Google form so we can accept your submissions. The GitHub username you file there will need to match that of your Pull Requests. If you have any questions or cannot file the CLA electronically, you can email [help@realm.io.]()
+
+### Samples
+___
+#### Kotlin Multiplatform Sample
+___
+The folder <code>examples/kmm-sample</code> contains an example showing how to use Realm in a multiplatform project, sharing code for using Realm in the shared module. The project is based on <code>https://github.com/Kotlin/kmm-sample.</code>
