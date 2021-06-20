@@ -4,15 +4,16 @@
 Realm is a mobile database that runs directly inside phones, tablets or wearables. This repository holds the source code for the Kotlin SDK for Realm, which runs on Kotlin Multiplatform and Android.
 
 ## Examples
-___
+
 https://github.com/realm/realm-kotlin-samples
 
 ## Quick Startup
-__
+
 ### Prerequisite
 Start a new [KMM](https://github.com/realm/realm-kotlin-samples) project.
 
 ### Setup
+
 - Add the following Gradle configuration in the root project (make sure you're using Kotlin 1.4.20 or recent) <root project>/build.gradle.kts
 <pre><code>buildscript {
     repositories {
@@ -54,7 +55,7 @@ kotlin {
 ![Alt text](/img/SharedGradle.png)
 
 ### Define model
-___
+
 Start writing your shared database logic in the shared module by defining first your model
 
 <pre><code>class Person : RealmObject {
@@ -68,17 +69,17 @@ class Dog : RealmObject {
 }</code></pre>
 
 ### Open Database
-___
+
 Define a RealmConfiguration with the database schema, then open the Realm using it.
 
 <pre><code>val configuration = RealmConfiguration(schema = setOf(Person::class, Dog::class))
 val realm = Realm.open(configuration)</pre></code>
 
  ### Write
-___
+
 Persist some data by instantiating the data objects and copying it into the open Realm instance
 
-// plain old kotlin object
+<code>// plain old kotlin object
 val person = Person().apply {
     name = "Carlo"
     dog = Dog().apply { name = "Fido"; age = 16 }
@@ -95,23 +96,24 @@ realm.create<Person>().apply {
             name = "Bar"
             dog = Dog().apply { name = "Filo"; age = 11 }
         }
-realm.commitTransaction()
+realm.commitTransaction()</code>
 
 ### Query
 ___
 The query language supported by Realm is inspired by Apple’s NSPredicate, see more examples here
 
-// All Persons
+<code>// All Persons
 val all = realm.objects<Person>()
 
 // Person named 'Carlo'
 val filteredByName = realm.objects<Person>().query("name = $0", "Carlo")
 
 // Person having a dog aged more than 7 with a name starting with 'Fi'
-val filteredByDog = realm.objects<Person>().query("dog.age > $0 AND dog.name BEGINSWITH $1", 7, "Fi")
+val filteredByDog = realm.objects<Person>().query("dog.age > $0 AND dog.name BEGINSWITH $1", 7, "Fi")</code>
+
 ### Update
-___
-// Find the first Person without a dog
+
+<code>// Find the first Person without a dog
 realm.objects<Person>().query("dog == NULL LIMIT(1)")
     .firstOrNull()
     ?.also { personWithoutDog ->
@@ -119,40 +121,40 @@ realm.objects<Person>().query("dog == NULL LIMIT(1)")
         realm.beginTransaction()
         personWithoutDog.dog = Dog().apply { name = "Laika";  age = 3 }
         realm.commitTransaction()
-    }
+    }</code>
 
 ### Delete
-___
+
 Use the result of a query to delete from the database
 
-// delete all Dogs
+<code>// delete all Dogs
 realm.beginTransaction()
 realm.objects<Dog>().delete()
-realm.commitTransaction()
+realm.commitTransaction()</code>
 Next: head to the full KMM example.
 
 NOTE: The SDK doesn't currently support x86 - Please use an x86_64 or arm64 emulator/device
 
 ### Developer Preview
-___
+
 The Realm Kotlin SDK is in Developer Preview. All API's might change without warning and no guarantees are given about stability. Do not use in production.
 
 ### Design documents
-___
+
 The public API of the SDK has not been finalized. Design discussions will happen in both Google Doc and this Github repository. Most bigger features will first undergo a design process that might not involve code. These design documents can be found using the following links:
 
 - Intial Project Description
 - API Design Overview
 
-### How to build locally:
-___
+## How to build locally:
+
 #### Prerequisites
-___
+
 - Swig. On Mac this can be installed using Homebrew: brew install swig.
 - CMake 3.18.1. Can be installed through the Android SDK Manager.
 
 #### Commands to build from source
-___
+
 <pre><code>git submodule update --init --recursive
 cd packages
 ./gradlew assemble</pre></code>
@@ -199,21 +201,23 @@ allprojects {
 See [Config.kt]() for the latest version number.
 
 ### Repository Guidelines
-#### Branch Strategy
-We have three branches for shared development: master, releases and next-major. Tagged releases are only made from releases.
 
-master:
+#### Branch Strategy
+
+We have three branches for shared development: <code>master</code>, <code>releases</code> and next-major. Tagged releases are only made from <code>releases.</code>
+
+<code>master:</code>
 
 - Target branch for new features.
 - Cotains the latest publishable state of the SDK.
 [SNAPSHOT releases]() are being created for every commit.
-releases:
+<code>releases:</code>
 
 All tagged releases are made from this branch.
 Target branch for bug fixes.
 Every commit should be merged back to master master.
 Minor changes (e.g. to documentation, tests, and the build system) may not affect end users but should still be merged to releases to avoid diverging too far from master and to reduce the likelihood of merge conflicts.
-next-major:
+<code>next-major:</code>
 
 Target branch for breaking changes that would result in a major version bump.
 Note: We currently only have the master branch, as no tagged releases have been made yet.
@@ -226,19 +230,20 @@ We use the offical [style guide]() from Kotlin which is enforced using [ktlint](
 ./gradlew ktlintCheck
 ./gradlew detekt
 
-# Call from root folder to automatically format all Kotlin code according to the code style rules.
+ Call from root folder to automatically format all Kotlin code according to the code style rules.
 ./gradlew ktlintFormat</code>
 
 Note: ktlint does not allow group imports using <code>*.</code>. You can configure IntelliJ to disallow this by going to preferences,<code> Editor > Code Style > Kotlin >  Imports</code> and select "Use single name imports".
 
 ### Writing Tests
+
 Currently all unit tests should be place in the test/ project instead of packages/library. The reason for this is that we need to apply the Realm Compiler Plugin to the tests and this introduces a circular dependency if the tests are in library.
 
 Inside tests/ there are 3 locations the files can be placed in:
 
-- test/src/commonTest
-- test/src/androidTest
-- test/src/macosTest
+- <code> test/src/commonTest</code> 
+- <code>test/src/androidTest</code> 
+- <code>test/src/macosTest</code> 
 Ideally all shared tests should be in commonTest with specific platform tests in androidTest/macosTest. However IntelliJ does not yet allow you run you to run common tests on Android from within the IDE](https://youtrack.jetbrains.com/issue/KT-46452), so we are using the following work-around:
 
 1\.All "common" tests should be placed in the test/src/androidtest/kotlin/io/realm/shared folder. They should be written using only common API's. I'e. use Kotlin Test, not JUnit. This io.realm.shared package should only contain tests we plan to eventually move to commontTest.
@@ -263,7 +268,7 @@ We love contributions to Realm! If you'd like to contribute code, documentation,
 
 This project adheres to the [Contributor Covenant Code of Conduct](). By participating, you are expected to uphold this code. Please report unacceptable behavior to [info@realm.io]().
 
-####CLA
+#### CLA
 
 Realm welcomes all contributions! The only requirement we have is that, like many other projects, we need to have a[ Contributor License Agreement]() (CLA) in place before we can accept any external code. Our own CLA is a modified version of the Apache Software Foundation’s CLA.
 
